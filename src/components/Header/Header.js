@@ -1,7 +1,5 @@
 import React from 'react';
-import './Header.css'
 import logo from '../../images/mesto.svg';
-
 
 function Header() {
     return (

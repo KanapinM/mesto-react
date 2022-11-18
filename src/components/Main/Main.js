@@ -1,10 +1,6 @@
 import React from 'react';
-import './Main.css';
 import api from '../../utils/Api';
 import Card from '../Card/Card';
-
-
-
 
 function Main(props) {
     const [userName, setUserName] = React.useState('');
@@ -29,7 +25,6 @@ function Main(props) {
                 ))
             })
             .catch((err) => console.log(err))
-
     }, [])
 
     return (
