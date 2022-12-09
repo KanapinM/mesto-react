@@ -96,6 +96,10 @@ export class Api {
                 return this.#onResponce(responce);
             })
     }
+
+    changeLikeCardStatus(cardId, isLiked) {
+        return isLiked ? this.likeCard(cardId) : this.unlikeCard(cardId);
+    }
 }
 
 const api = new Api({

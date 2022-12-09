@@ -1,50 +1,29 @@
 import React from 'react';
-import api from '../../utils/Api';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+
 import Card from '../Card/Card';
 
 function Main(props) {
-    const [userName, setUserName] = React.useState('');
-    const [userDescription, setUserDescription] = React.useState('');
-    const [userAvatar, setUserAvatar] = React.useState('');
-    const [cards, setCards] = React.useState([]);
-
-    React.useEffect(() => {
-        Promise.all([api.getUserData(), api.getInitialCards()])
-            .catch((err) => console.log(err))
-            .then(([user, cards]) => {
-                setUserName(user.name);
-                setUserDescription(user.about);
-                setUserAvatar(user.avatar);
-
-                setCards(cards.map((card) => ({
-                    cardId: card._id,
-                    link: card.link,
-                    name: card.name,
-                    likes: card.likes.length
-                })
-                ))
-            })
-            .catch((err) => console.log(err))
-    }, [])
+    const userData = React.useContext(CurrentUserContext);
 
     return (
         <main className="content">
             <section className="profile">
                 <div className="profile__column">
-                    <div onClick={props.onEditAvatar} style={{ backgroundImage: `url(${userAvatar})` }} className="profile__avatar"></div>
+                    <div onClick={props.onEditAvatar} style={{ backgroundImage: `url(${userData ? userData.avatar : ''})` }} className="profile__avatar"></div>
                     <div className="profile__info">
                         <div className="profile__edit">
-                            <h1 className="profile__name">{userName ? userName : 'Идентификация...'}</h1>
+                            <h1 className="profile__name">{userData ? userData.name : 'Идентификация...'}</h1>
                             <button onClick={props.onEditProfile} type="button" aria-label="edit" className="profile__edit-button"></button>
                         </div>
-                        <p className="profile__about">{userDescription ? userDescription : 'Получение данных...'}</p>
+                        <p className="profile__about">{userData ? userData.about : 'Получение данных...'}</p>
                     </div>
                 </div>
                 <button onClick={props.onAddPlace} type="button" aria-label="add" className="profile__add-button"></button>
             </section>
             <div className="cardsContainer">
-                {cards.map(({ ...card }) =>
-                    <Card onCardClick={props.onCardClick} card={card} key={card.cardId} {...card} />
+                {props.cards.map(({ ...card }) =>
+                    <Card onCardClick={props.onCardClick} onCardLike={props.onCardLike} onCardAgreement={props.onCardAgreement} card={card} key={card._id} {...card} />
                 )}
             </div>
         </main>
