@@ -11,7 +11,7 @@ function EditProfilePopup(props) {
             name: currentUser ? currentUser.name : '',
             about: currentUser ? currentUser.about : ''
         })
-    }, [currentUser]);
+    }, [currentUser, props.isEditProfilePopupOpen]);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -34,15 +34,13 @@ function EditProfilePopup(props) {
             buttonText="Сохранить"
             onSubmit={handleSubmit}
         >
-            <>
-                <input type="text" onChange={handleChange} value={placeHolders.name || ''} className="popup__input popup__input_type_name" id="name-input"
-                    placeholder="Ваше Имя" required minLength="2" maxLength="40" name="name" />
-                <span className="popup__input-error name-input-error"></span>
+            <input type="text" onChange={handleChange} value={placeHolders.name || ''} className="popup__input popup__input_type_name" id="name-input"
+                placeholder="Ваше Имя" required minLength="2" maxLength="40" name="name" />
+            <span className="popup__input-error name-input-error"></span>
 
-                <input type="text" onChange={handleChange} value={placeHolders.about || ''} className="popup__input popup__input_type_about" id="about-input"
-                    placeholder="Интересы" required minLength="2" maxLength="200" name="about" />
-                <span className="popup__input-error about-input-error"></span>
-            </>
+            <input type="text" onChange={handleChange} value={placeHolders.about || ''} className="popup__input popup__input_type_about" id="about-input"
+                placeholder="Интересы" required minLength="2" maxLength="200" name="about" />
+            <span className="popup__input-error about-input-error"></span>
         </PopupWithForm>
     )
 }

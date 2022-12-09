@@ -5,11 +5,12 @@ import api from '../utils/Api';
 import Header from '../components/Header/Header';
 import Main from '../components/Main/Main';
 import Footer from '../components/Footer/Footer';
-import PopupWithForm from '../components/Popup/PopupWithForm/PopupWithForm';
 import ImagePopup from '../components/Popup/ImagePopup/ImagePopup';
 import EditProfilePopup from '../components/EditProfilePopup/EditProfilePopup'
 import EditAvatarPopup from '../components/EditAvatarPopup/EditAvatarPopup'
 import AddPlacePopup from '../components/AddPlacePopup/AddPlacePopup'
+import AgreementPopup from '../components/AgreementPopup/AgreementPopup'
+
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -30,7 +31,6 @@ function App() {
         setCards(cards.map((card) => (card)
         ));
       })
-      .catch((err) => console.log(err))
   }, [])
 
   function handleEditAvatarClick() {
@@ -67,32 +67,36 @@ function App() {
       .removeCard(card._id)
       .then(() => {
         setCards(cards.filter((cards) => cards._id !== card._id));
+        closeAllPopups();
       })
-      .then(closeAllPopups())
       .catch((err) => console.log(err));
   }
   function handleUpdateUser(dataUser) {
     api
       .editUserData(dataUser)
       .catch((err) => console.log(err))
-      .then((res) => setCurrentUser(res))
-      .then(closeAllPopups())
-      .catch((err) => console.log(err))
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
   }
   function handleUpdateAvatar(dataAvatar) {
     api
       .changeAvatar(dataAvatar)
       .catch((err) => console.log(err))
-      .then((res) => setCurrentUser(res))
-      .then(closeAllPopups())
-      .catch((err) => console.log(err))
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
   }
   function handleAddPlace(newCard) {
     api
       .addCard(newCard)
       .catch((err) => console.log(err))
-      .then((res) => setCards([res, ...cards]))
-      .then(closeAllPopups())
+      .then((res) => {
+        setCards([res, ...cards]);
+        closeAllPopups();
+      })
   }
 
   const closeAllPopups = () => {
@@ -115,8 +119,7 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
           onCardLike={handleCardLike}
-          onCardAgreement={handleCardDelete}
-        // onSubmit={handleCardDelete}
+          onCardAgreement={handleAgreementClick}
         />
         <Footer />
 
@@ -138,18 +141,12 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
         />
 
-        <PopupWithForm
-          isOpen={isAgreementPopupOpen}
+        <AgreementPopup
+          isAgreementPopupOpen={isAgreementPopupOpen}
           onClose={closeAllPopups}
-          name="agreement"
-          title="Вы уверены?"
-          buttonText="Да"
+          onCardDelete={handleCardDelete}
           card={card}
-          // onCardAgreement={handleAgreementClick}
-          onSubmit={handleCardDelete}
-        >
-        </PopupWithForm>
-
+        />
 
         <ImagePopup
           card={selectedCard}
